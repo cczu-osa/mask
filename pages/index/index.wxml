@@ -1,0 +1,65 @@
+<view class='contentWarp' bindtap="setNotActivate">
+      <!-- *************操作区域*************  -->
+      <block wx:for="{{itemList}}" wx:key="{{item.id}}">
+        <!-- 圆心坐标 <text style='position:absolute;top:{{item.y}}px;left:{{item.x}}px;width:2px;height:2px;background-color:yellow;z-index:500'></text> -->
+        <view class='touchWrap' style='transform: scale({{item.scale}});top:{{item.top}}px;left:{{item.left}}px; ' catchtap>
+          <view class='imgWrap {{item.active? "touchActive":""}}' style="transform: rotate({{item.angle}}deg); border: {{item.active?4*item.oScale:0}}rpx #fff dashed;">
+            <image src='{{item.image}}' data-id='{{item.id}}' style='width:{{item.width}}px;height:{{item.height}}px;' bindtouchstart='WraptouchStart'  bindtouchmove='WraptouchMove' bindtouchend='WraptouchEnd'></image>
+            <image class='x' src='../../images/x.png' style='transform: scale({{item.oScale}});transform-origin:center;' data-id='{{item.id}}' bindtap='deleteItem'></image>
+            <image class='o' src='../../images/o.png' style='transform: scale({{item.oScale}});transform-origin:center;' data-id='{{item.id}}' bindtouchstart='oTouchStart' bindtouchmove='oTouchMove' ></image>
+          </view>
+        </view>
+      </block>
+      <!-- **************操作区域************  -->
+
+      <block wx:if="{{avatarUrl}}">
+        <view style="width:100vw;margin-left:225rpx;" class="text-center">
+          <!-- <canvas style="width: 350rpx;height: 350rpx;background:white;position:absolute;" canvas-id="guoqing"></canvas> -->
+          <image src="{{avatarUrl}}" style="width: 300rpx;height: 300rpx;background:white;position:absolute;"></image>
+        </view>
+      </block>
+
+      <block class="" wx:else>
+        <button open-type="getUserInfo" class="margin" style="margin-top:30vh;" bindgetuserinfo="getUserInfo">获取头像</button>
+      </block>
+
+      <view class="MaskWrap" style="margin-top:205px;">
+          <block wx:for="{{imgList}}" >
+            <view class="solid MaskImgWrap {{item.selected?'bg-blue':''}}">
+              <image src="{{item.url}}" bindload="downloadImage" data-index="{{index}}" 
+                      bindtap="selectImg" style="width:120rpx;height:120rpx;"></image>
+            </view>
+          </block>
+      </view>
+      <button style="width:200px;" bindtap="drawCanvas">生成头像</button>
+
+      <view class="bottom">
+        <view class="padding" bindtap="chooseImg">
+          使用本地图片 <text class="icon-right"></text>
+        </view>
+      </view>
+</view>
+
+<!-- 画布弹窗 -->
+<view class="btn" bindtap="powerDrawer" data-statu="open">button</view> 
+
+<!-- 参考 https://www.jb51.net/article/111467.htm -->
+<!-- 背景 -->
+<view class="drawer_screen" bindtap="powerDrawer" data-statu="close" hidden="{{!showModalStatus}}"></view> 
+<!-- 使用animation属性指定需要执行的动画 -->
+<view animation="{{animationData}}" class="drawer_box" hidden="{{!showModalStatus}}"> 
+  <!--drawer content-->
+  <view class="drawer_title">图片</view>
+  <!-- <view style="canvasWrap">
+    <canvas style="width: 300rpx;height: 300rpx;background:white;" canvas-id="drawmask"></canvas>
+  </view> -->
+  <view class="canvasWrap">
+    <canvas style="width: 300rpx;height: 300rpx;background:white;position:absolute;" canvas-id="drawmask"></canvas>
+  </view>
+  <view class="btn_ok" bindtap="save" data-statu="close">保存到相册</view>
+  <view class="btn_ok" bindtap="powerDrawer" data-statu="close">取消</view> 
+</view>
+
+<!-- <view style="position:fixed; top:200px">
+    <canvas style="width: 300rpx;height: 300rpx;background:white;position:absolute;" canvas-id="drawmask"></canvas>
+</view> -->
